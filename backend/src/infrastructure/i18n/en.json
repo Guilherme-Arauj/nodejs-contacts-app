@@ -1,0 +1,31 @@
+{
+  "errors":{
+    "contact": {
+      "NAME_REQUIRED": "Name is required",
+      "NAME_TOO_SHORT": "Name must be longer than {{minLength}} characters",
+      "NAME_TOO_LONG": "Name cannot be longer than {{maxLength}} characters",
+      "CONTACT_REQUIRED": "Contact is required",
+      "CONTACT_INVALID_LENGTH": "Contact must have exactly {{expectedLength}} digits",
+      "CONTACT_INVALID_FORMAT": "Contact format is invalid",
+      "EMAIL_REQUIRED": "Email is required",
+      "EMAIL_INVALID_FORMAT": "Email format is invalid",
+      "EMAIL_TOO_LONG": "Email cannot be longer than {{maxLength}} characters",
+      "PICTURE_REQUIRED": "Picture is required",
+      "PICTURE_URL_TOO_LONG": "Picture URL cannot be longer than {{maxLength}} characters"
+    },
+    "user": {
+      "NAME_REQUIRED": "Name is required",
+      "NAME_TOO_SHORT": "Name must be at least {{minLength}} characters",
+      "NAME_TOO_LONG": "Name cannot be longer than {{maxLength}} characters",
+      "EMAIL_REQUIRED": "Email is required",
+      "EMAIL_INVALID_FORMAT": "Email format is invalid",
+      "EMAIL_TOO_LONG": "Email cannot be longer than {{maxLength}} characters",
+      "EMAIL_ALREADY_EXISTS": "Email is already in use",
+      "PASSWORD_REQUIRED": "Password is required"
+    }
+  },
+  "success":{
+
+  },
+  "test": "This is a test"
+}

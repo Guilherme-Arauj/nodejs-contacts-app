@@ -103,6 +103,14 @@ exports.Prisma.ContactsScalarFieldEnum = {
   updated_at: 'updated_at'
 };
 
+exports.Prisma.UsersScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  password: 'password',
+  created_at: 'created_at'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -115,9 +123,16 @@ exports.Prisma.contactsOrderByRelevanceFieldEnum = {
   picture: 'picture'
 };
 
+exports.Prisma.usersOrderByRelevanceFieldEnum = {
+  name: 'name',
+  email: 'email',
+  password: 'password'
+};
+
 
 exports.Prisma.ModelName = {
-  contacts: 'contacts'
+  contacts: 'contacts',
+  users: 'users'
 };
 /**
  * Create the Client
@@ -127,10 +142,10 @@ const config = {
   "clientVersion": "7.2.0",
   "engineVersion": "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3",
   "activeProvider": "mysql",
-  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/infrastructure/database/generated/prisma/client\"\n}\n\ndatasource db {\n  provider = \"mysql\"\n}\n\nmodel contacts {\n  id         Int      @id @default(autoincrement())\n  name       String   @db.VarChar(255)\n  contact    String   @unique(map: \"uk_contacts_contact\") @db.Char(9)\n  email      String   @unique(map: \"uk_contacts_email\") @db.VarChar(255)\n  picture    String   @db.VarChar(500)\n  created_at DateTime @default(now()) @db.DateTime(0)\n  updated_at DateTime @default(now()) @db.DateTime(0)\n}\n"
+  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/infrastructure/database/generated/prisma/client\"\n}\n\ndatasource db {\n  provider = \"mysql\"\n}\n\nmodel contacts {\n  id         Int      @id @default(autoincrement())\n  name       String   @db.VarChar(255)\n  contact    String   @unique(map: \"uk_contacts_contact\") @db.Char(9)\n  email      String   @unique(map: \"uk_contacts_email\") @db.VarChar(255)\n  picture    String   @db.VarChar(500)\n  created_at DateTime @default(now()) @db.DateTime(0)\n  updated_at DateTime @default(now()) @db.DateTime(0)\n}\n\nmodel users {\n  id         Int      @id @default(autoincrement())\n  name       String   @db.VarChar(255)\n  email      String   @unique(map: \"uk_users_email\") @db.VarChar(255)\n  password   String   @db.VarChar(255)\n  created_at DateTime @default(now()) @db.DateTime(0)\n}\n"
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"contacts\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"contact\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"picture\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"contacts\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"contact\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"picture\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"users\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.compilerWasm = {
       getRuntime: async () => require('./query_compiler_bg.js'),

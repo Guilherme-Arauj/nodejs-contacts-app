@@ -16,3 +16,11 @@ model contacts {
   created_at DateTime @default(now()) @db.DateTime(0)
   updated_at DateTime @default(now()) @db.DateTime(0)
 }
+
+model users {
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(255)
+  email      String   @unique(map: "uk_users_email") @db.VarChar(255)
+  password   String   @db.VarChar(255)
+  created_at DateTime @default(now()) @db.DateTime(0)
+}

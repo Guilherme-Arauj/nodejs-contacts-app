@@ -1,129 +1,53 @@
 <template>
-  <v-app>
-    <v-app-bar color="primary" dark>
-      <v-app-bar-title>Gerenciador de Contatos</v-app-bar-title>
-      <v-spacer></v-spacer>
-      <v-btn @click="showAddDialog = true">
-        <v-icon start>mdi-plus</v-icon>
-        Novo Contato
-      </v-btn>
-    </v-app-bar>
+  <div>
+    <div class="d-flex justify-end mb-4 pa-4">
+      <button @click="$router.push('/auth')" style="background: #1976d2; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;">
+        Login
+      </button>
+    </div>
+    
+    <div style="padding: 16px;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px;">
+        <div v-for="contact in contacts" :key="contact.id" style="border: 1px solid #ddd; border-radius: 8px; padding: 16px;">
+          <img :src="contact.picture" style="width: 100%; height: 200px; object-fit: cover; border-radius: 4px;" />
+          <h3>{{ contact.name }}</h3>
+          <p>📞 {{ contact.contact }}</p>
+          <p>✉️ {{ contact.email }}</p>
+          <div style="display: flex; gap: 8px; margin-top: 16px;">
+            <button @click="viewContact(contact)" style="padding: 4px 8px; border: 1px solid #ddd; background: white; cursor: pointer;">Ver</button>
+            <button @click="editContact(contact)" style="padding: 4px 8px; border: 1px solid #ddd; background: white; cursor: pointer;">Editar</button>
+            <button @click="confirmDelete(contact)" style="padding: 4px 8px; border: 1px solid #f44336; background: #f44336; color: white; cursor: pointer;">Deletar</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <v-main>
-      <v-container>
-        <!-- Lista de Contatos -->
-        <v-row>
-          <v-col v-for="contact in contacts" :key="contact.id" cols="12" md="6" lg="4">
-            <v-card>
-              <v-img :src="contact.picture" height="200" cover></v-img>
-              <v-card-title>{{ contact.name }}</v-card-title>
-              <v-card-text>
-                <p><v-icon small>mdi-phone</v-icon> {{ contact.contact }}</p>
-                <p><v-icon small>mdi-email</v-icon> {{ contact.email }}</p>
-              </v-card-text>
-              <v-card-actions>
-                <v-btn variant="text" @click="viewContact(contact)">Ver</v-btn>
-                <v-btn variant="text" @click="editContact(contact)">Editar</v-btn>
-                <v-btn variant="text" color="error" @click="confirmDelete(contact)">Deletar</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-main>
+    <!-- Modals simplificados -->
+    <div v-if="showViewDialog" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000;">
+      <div style="background: white; padding: 24px; border-radius: 8px; max-width: 400px; width: 90%;">
+        <h3>{{ selectedContact?.name }}</h3>
+        <p>Contato: {{ selectedContact?.contact }}</p>
+        <p>Email: {{ selectedContact?.email }}</p>
+        <button @click="showViewDialog = false" style="padding: 8px 16px; background: #1976d2; color: white; border: none; border-radius: 4px; cursor: pointer;">Fechar</button>
+      </div>
+    </div>
 
-    <!-- Dialog Adicionar/Editar -->
-    <v-dialog v-model="showAddDialog" max-width="600">
-      <v-card>
-        <v-card-title>{{ isEditing ? 'Editar' : 'Adicionar' }} Contato</v-card-title>
-        <v-card-text>
-          <v-form ref="form" v-model="formValid">
-            <v-text-field
-              v-model="form.name"
-              label="Nome"
-              :rules="nameRules"
-              required
-            ></v-text-field>
-            
-            <v-text-field
-              v-model="form.contact"
-              label="Contato (9 dígitos)"
-              :rules="contactRules"
-              required
-            ></v-text-field>
-            
-            <v-text-field
-              v-model="form.email"
-              label="Email"
-              :rules="emailRules"
-              required
-            ></v-text-field>
-            
-            <v-file-input
-              v-model="form.picture"
-              label="Foto"
-              accept="image/*"
-              :rules="pictureRules"
-            ></v-file-input>
-          </v-form>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn @click="closeDialog">Cancelar</v-btn>
-          <v-btn color="primary" @click="saveContact" :disabled="!formValid">
-            {{ isEditing ? 'Atualizar' : 'Salvar' }}
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <div v-if="showDeleteDialog" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000;">
+      <div style="background: white; padding: 24px; border-radius: 8px; max-width: 400px; width: 90%;">
+        <h3>Confirmar Exclusão</h3>
+        <p>Tem certeza que deseja excluir o contato "{{ contactToDelete?.name }}"?</p>
+        <div style="display: flex; gap: 8px; margin-top: 16px;">
+          <button @click="showDeleteDialog = false" style="padding: 8px 16px; background: #ddd; border: none; border-radius: 4px; cursor: pointer;">Cancelar</button>
+          <button @click="deleteContact" style="padding: 8px 16px; background: #f44336; color: white; border: none; border-radius: 4px; cursor: pointer;">Excluir</button>
+        </div>
+      </div>
+    </div>
 
-    <!-- Dialog Ver Detalhes -->
-    <v-dialog v-model="showViewDialog" max-width="500">
-      <v-card v-if="selectedContact">
-        <v-img :src="selectedContact.picture" height="300" cover></v-img>
-        <v-card-title>{{ selectedContact.name }}</v-card-title>
-        <v-card-text>
-          <v-list>
-            <v-list-item>
-              <v-list-item-title>Contato</v-list-item-title>
-              <v-list-item-subtitle>{{ selectedContact.contact }}</v-list-item-subtitle>
-            </v-list-item>
-            <v-list-item>
-              <v-list-item-title>Email</v-list-item-title>
-              <v-list-item-subtitle>{{ selectedContact.email }}</v-list-item-subtitle>
-            </v-list-item>
-          </v-list>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn @click="showViewDialog = false">Fechar</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
-    <!-- Dialog Confirmar Exclusão -->
-    <v-dialog v-model="showDeleteDialog" max-width="400">
-      <v-card>
-        <v-card-title>Confirmar Exclusão</v-card-title>
-        <v-card-text>
-          Tem certeza que deseja excluir o contato "{{ contactToDelete?.name }}"?
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn @click="showDeleteDialog = false">Cancelar</v-btn>
-          <v-btn color="error" @click="deleteContact">Excluir</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
-    <!-- Snackbar -->
-    <v-snackbar v-model="snackbar.show" :color="snackbar.color">
+    <div v-if="snackbar.show" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #4caf50; color: white; padding: 12px 24px; border-radius: 4px; z-index: 1001;">
       {{ snackbar.message }}
-      <template v-slot:actions>
-        <v-btn variant="text" @click="snackbar.show = false">Fechar</v-btn>
-      </template>
-    </v-snackbar>
-  </v-app>
+      <button @click="snackbar.show = false" style="background: none; border: none; color: white; margin-left: 16px; cursor: pointer;">✕</button>
+    </div>
+  </div>
 </template>
 
 <script setup>

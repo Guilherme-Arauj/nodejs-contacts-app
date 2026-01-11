@@ -130,6 +130,14 @@ exports.Prisma.ContactsScalarFieldEnum = {
   updated_at: 'updated_at'
 };
 
+exports.Prisma.UsersScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  password: 'password',
+  created_at: 'created_at'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -142,9 +150,16 @@ exports.Prisma.contactsOrderByRelevanceFieldEnum = {
   picture: 'picture'
 };
 
+exports.Prisma.usersOrderByRelevanceFieldEnum = {
+  name: 'name',
+  email: 'email',
+  password: 'password'
+};
+
 
 exports.Prisma.ModelName = {
-  contacts: 'contacts'
+  contacts: 'contacts',
+  users: 'users'
 };
 
 /**

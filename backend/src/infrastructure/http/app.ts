@@ -5,6 +5,8 @@ import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
+import { i18nMiddleware } from "./middlewares/i18nMiddleware.js";
+import { userRouter } from "./routes/routes.js";
 
 const app: Application = express();
 
@@ -13,8 +15,12 @@ const app: Application = express();
 
 // Middleware para permitir requisições de diferentes origens
 app.use(cors({
-  origin: "*",
-  credentials: true
+  origin: true,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  preflightContinue: false,
+  optionsSuccessStatus: 200
 }));
 
 // // Limite de requests por IP
@@ -27,5 +33,10 @@ app.use(cors({
 // Logs e body parser
 app.use(morgan("dev"));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(i18nMiddleware);
+
+// Rotas
+app.use(userRouter);
 
 export default app;
